@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getAuthUserByEmail, getPublicUserByEmail } from "@/app/lib/auth/user-profile";
+import { getAuthUserByEmail } from "@/app/lib/auth/user-profile";
 import { type UserType } from "@/app/lib/auth/user-types";
 import type { RegisterFormState } from "@/app/register/register-form-state";
 import { getSupabaseFriendlyErrorMessage, formatSupabaseErrorForLog } from "@/src/lib/supabase/errors";
@@ -42,7 +42,9 @@ export async function registerAction(_previous: RegisterFormState, formData: For
     if (!terms) return state(values, copy.terms);
     if (user_type !== "customer" && user_type !== "owner") return state(values, copy.role);
     if (!(await ensureSupabaseAuthReachable())) return state(values, getSupabaseConnectionErrorMessage());
-    if (await getPublicUserByEmail(email)) return state(values, copy.accountExists);
+    const existingAuthUser = await getAuthUserByEmail(email);
+    if (existingAuthUser?.email_confirmed_at) return state(values, copy.accountExists);
+    if (existingAuthUser) redirect("/register/verify?email=" + encodeURIComponent(email));
 
     const supabase = await createSupabaseServerClient();
     const resolvedUserType: UserType = user_type === "owner" ? "owner" : "customer";

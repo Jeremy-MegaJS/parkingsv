@@ -5,7 +5,6 @@ import { createSupabaseServerClient } from "@/src/lib/supabase/server";
 import { formatSupabaseErrorForLog } from "@/src/lib/supabase/errors";
 
 const DEFAULT_AVATAR = "/parkingsv/default-avatar.jpeg";
-const LEGACY_UPLOAD_PREFIX = "/crud-php2/public/uploads/";
 
 export type SessionUser = {
   authUserId: string;
@@ -24,15 +23,11 @@ function resolveProfilePicture(profilePicture: string | null) {
     return DEFAULT_AVATAR;
   }
 
-  if (profilePicture.startsWith(LEGACY_UPLOAD_PREFIX)) {
-    return `/legacy-assets/${profilePicture.slice(LEGACY_UPLOAD_PREFIX.length)}`;
+  if (profilePicture.startsWith("/parkingsv/") || /^https?:\\/\\//i.test(profilePicture)) {
+    return profilePicture;
   }
 
-  if (profilePicture.startsWith("/crud-php2/assets/images/")) {
-    return DEFAULT_AVATAR;
-  }
-
-  return profilePicture;
+  return DEFAULT_AVATAR;
 }
 
 function mapSessionUser(authUser: User, publicUser: Awaited<ReturnType<typeof getPublicUserByEmail>>): SessionUser | null {

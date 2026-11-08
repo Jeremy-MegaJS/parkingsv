@@ -13,7 +13,6 @@ export async function ensureSupabaseAuthReachable() {
     const response = await fetch(new URL("/auth/v1/health", getSupabaseUrl()), {
       headers: {
         apikey: getSupabaseAnonKey(),
-        Authorization: `Bearer ${getSupabaseAnonKey()}`,
       },
       method: "GET",
       signal: controller.signal,

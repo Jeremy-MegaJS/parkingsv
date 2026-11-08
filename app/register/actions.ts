@@ -79,6 +79,7 @@ export async function registerAction(_previous: RegisterFormState, formData: For
           redirect("/register/verify?email=" + encodeURIComponent(email));
         }
       } catch (lookupError) {
+        if (lookupError instanceof Error && lookupError.message === "NEXT_REDIRECT") throw lookupError;
         console.warn("Could not check pending signup after email rate limit.", formatSupabaseErrorForLog(lookupError));
       }
 

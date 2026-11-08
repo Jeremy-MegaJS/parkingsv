@@ -25,7 +25,7 @@ type PublicUserRow = {
   business_name: string | null;
   date_of_birth: string | null;
   email: string;
-  email_verified: number | null;
+  email_verified: boolean | null;
   email_verified_at: string | null;
   full_name: string;
   id: number;

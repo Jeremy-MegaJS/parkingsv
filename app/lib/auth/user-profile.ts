@@ -124,6 +124,10 @@ async function findAuthUserByEmail(email: string) {
   return null;
 }
 
+export async function getAuthUserByEmail(email: string) {
+  return findAuthUserByEmail(email);
+}
+
 function buildFallbackName(email: string) {
   const localPart = email.split("@")[0] ?? "usuario";
   const normalized = localPart

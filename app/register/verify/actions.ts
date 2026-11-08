@@ -83,6 +83,7 @@ export async function resendRegistrationOtpAction(
 
     return {
       success: "Solicitamos un código nuevo. Usa el último correo recibido; un código anterior puede dejar de ser válido.",
+      requestedAt: Date.now(),
     };
   } catch (error) {
     console.warn("Registration OTP resend failed.", formatSupabaseErrorForLog(error));

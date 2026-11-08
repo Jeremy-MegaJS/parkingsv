@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useSitePreferences } from "@/components/useSitePreferences";
 import {
   resendRegistrationOtpAction,
@@ -17,6 +17,17 @@ export default function VerifyRegistrationForm({ email }: { email: string }) {
   const en = preferences.language === "en";
   const [verifyState, verifyAction, verifying] = useActionState(verifyRegistrationOtpAction, initialVerifyState);
   const [resendState, resendAction, resending] = useActionState(resendRegistrationOtpAction, initialResendState);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendState.requestedAt) setCooldown(60);
+  }, [resendState.requestedAt]);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timeout = window.setTimeout(() => setCooldown((remaining) => Math.max(0, remaining - 1)), 1000);
+    return () => window.clearTimeout(timeout);
+  }, [cooldown]);
 
   return (
     <div className="register-form">
@@ -55,11 +66,19 @@ export default function VerifyRegistrationForm({ email }: { email: string }) {
         <p>{en ? "Didn't receive the email or need a new code?" : "¿No recibiste el correo o necesitas otro código?"}</p>
         <form action={resendAction}>
           <input type="hidden" name="email" value={email} />
-          <button type="submit" className="btn-register" disabled={resending || verifying}>
-            {resending ? (en ? "Sending..." : "Enviando...") : (en ? "Resend code" : "Reenviar código")}
+          <button type="submit" className="btn-register" disabled={resending || verifying || cooldown > 0}>
+            {resending
+              ? (en ? "Sending..." : "Enviando...")
+              : cooldown > 0
+                ? (en ? `Resend in ${cooldown}s` : `Reenviar en ${cooldown}s`)
+                : (en ? "Resend code" : "Reenviar código")}
           </button>
         </form>
-        {resendState.success ? <p className="alert alert-success" role="status">{en ? "A new code was requested. Use the latest email; previous codes may no longer work." : resendState.success}</p> : null}
+        {resendState.success ? (
+          <p className="alert" role="status">
+            {en ? "A new code was requested. Use the latest email; previous codes may no longer work." : resendState.success}
+          </p>
+        ) : null}
         {resendState.error ? <p className="alert alert-error" role="alert">{resendState.error}</p> : null}
       </div>
     </div>

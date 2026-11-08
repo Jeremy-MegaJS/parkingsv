@@ -31,7 +31,7 @@ export default function VerifyRegistrationForm({ email }: { email: string }) {
 
   return (
     <div className="register-form">
-      <p>{en ? "We sent an 8-digit verification code to:" : "Enviamos un código de verificación de 8 dígitos a:"}</p>
+      <p>{en ? "Your registration is pending email verification. If you received the code, enter it here:" : "Tu registro está pendiente de verificar el correo. Si recibiste el código, escríbelo aquí:"}</p>
       <strong>{email}</strong>
 
       <form action={verifyAction}>
@@ -66,11 +66,13 @@ export default function VerifyRegistrationForm({ email }: { email: string }) {
         <p>{en ? "Didn't receive the email or need a new code?" : "¿No recibiste el correo o necesitas otro código?"}</p>
         <form action={resendAction}>
           <input type="hidden" name="email" value={email} />
-          <button type="submit" className="btn-register" disabled={resending || verifying || cooldown > 0}>
+          <button type="submit" className="btn-register" disabled={resending || verifying || cooldown > 0 || Boolean(resendState.blocked)}>
             {resending
               ? (en ? "Sending..." : "Enviando...")
               : cooldown > 0
                 ? (en ? `Resend in ${cooldown}s` : `Reenviar en ${cooldown}s`)
+                : resendState.blocked
+                ? (en ? "Email temporarily unavailable" : "Correo temporalmente no disponible")
                 : (en ? "Resend code" : "Reenviar código")}
           </button>
         </form>

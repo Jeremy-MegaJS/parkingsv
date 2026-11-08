@@ -224,7 +224,8 @@ export async function upsertPublicUserProfile(input: UpsertPublicUserInput) {
     full_name: fullName,
     password_hash: passwordHash,
     phone_number: input.phoneNumber ?? existing?.phoneNumber ?? null,
-    profile_picture: input.profilePicture ?? existing?.profilePicture ?? null,
+    profile_picture:
+      input.profilePicture ?? existing?.profilePicture ?? "/parkingsv/default-avatar.jpeg",
     user_type: userType,
   };
 

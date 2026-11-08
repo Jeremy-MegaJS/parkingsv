@@ -7,7 +7,7 @@ import { formatSupabaseErrorForLog, getSupabaseFriendlyErrorMessage } from "@/sr
 import { createSupabaseServerClient } from "@/src/lib/supabase/server";
 
 export type VerifyRegistrationState = { error: string };
-export type ResendRegistrationState = { error?: string; success?: string; requestedAt?: number };
+export type ResendRegistrationState = { error?: string; success?: string; requestedAt?: number; blocked?: boolean };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -87,7 +87,19 @@ export async function resendRegistrationOtpAction(
     };
   } catch (error) {
     console.warn("Registration OTP resend failed.", formatSupabaseErrorForLog(error));
-    const message = error instanceof Error ? error.message.toLowerCase() : "";
+    const authError = typeof error === "object" && error !== null
+      ? error as { code?: unknown; status?: unknown; message?: unknown }
+      : {};
+    const code = String(authError.code ?? "");
+    const message = String(authError.message ?? (error instanceof Error ? error.message : "")).toLowerCase();
+    const emailRateLimited = code === "over_email_send_rate_limit"
+      || (Number(authError.status) === 429 && /email.*rate limit|rate limit.*email/.test(message));
+    if (emailRateLimited) {
+      return {
+        blocked: true,
+        error: "Supabase alcanzó el límite de correos del proyecto. No se envió el código. Configura SMTP personalizado o espera a que se restablezca el límite; no sigas reintentando.",
+      };
+    }
     if (/rate limit|too many requests|security purposes|after .* seconds/.test(message)) {
       return { error: "Supabase limita los reenvíos. Espera aproximadamente 60 segundos antes de solicitar otro código." };
     }

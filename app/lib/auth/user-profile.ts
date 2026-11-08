@@ -309,50 +309,8 @@ export async function updatePublicUserProfileById(
   return getPublicUserById(userId);
 }
 
-export async function createOrConfirmAuthUser(input: AuthUserBootstrapInput) {
-  const admin = createSupabaseAdminClient();
-  const normalizedEmail = input.email.trim().toLowerCase();
-  const metadata = {
-    date_of_birth: input.dateOfBirth?.trim() || null,
-    full_name: input.fullName.trim(),
-    user_type: input.userType,
-  };
-  const existingAuthUser = await findAuthUserByEmail(normalizedEmail);
-
-  if (existingAuthUser) {
-    const existingMetadata =
-      typeof existingAuthUser.user_metadata === "object" && existingAuthUser.user_metadata !== null
-        ? (existingAuthUser.user_metadata as Record<string, unknown>)
-        : {};
-
-    const { data, error } = await admin.auth.admin.updateUserById(existingAuthUser.id, {
-      email_confirm: true,
-      password: input.password,
-      user_metadata: {
-        ...existingMetadata,
-        ...metadata,
-      },
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    return data.user;
-  }
-
-  const { data, error } = await admin.auth.admin.createUser({
-    email: normalizedEmail,
-    email_confirm: true,
-    password: input.password,
-    user_metadata: metadata,
-  });
-
-  if (error) {
-    throw error;
-  }
-
-  return data.user;
+export async function createOrConfirmAuthUser(_input: AuthUserBootstrapInput): Promise<never> {
+  throw new Error("Direct Admin API account creation is disabled. Public accounts must complete Supabase email verification.");
 }
 
 export async function createLegacyAuthUserIfNeeded(email: string, password: string) {

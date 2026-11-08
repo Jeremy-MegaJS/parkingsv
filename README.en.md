@@ -1,108 +1,63 @@
-# Parking SV
+# Parking SV — Academic demo
 
-Migration of the original site in `crud-php2/` into a `Next.js 16` and `React 19` app.
+Parking SV is an academic demonstration application built with **Next.js 16, React 19, TypeScript, and Supabase**. It is not a commercial service and does not provide real-time availability, operational reservations, or contact with parking operators.
 
-## Overview
+## Included
 
-Parking SV combines the visual language of the original PHP project with new screens built in the App Router. The current goal of this repo is to keep moving the experience, routes, and core flows forward without losing compatibility with the original version.
+- A catalog of four parking posts preserved from the original academic project.
+- Original photos associated with those posts.
+- Locations, categories, schedules, capacities, fees, services, and restrictions.
+- Synthetic customer and owner profiles with generic avatars.
+- A bilingual interface and demo routes for exploring the product experience.
+
+Names and contact details embedded in parking posts have been replaced with fictional values. Legacy accounts, passwords, and personal profile data were not imported.
 
 ## Stack
 
-- `Next.js 16.2.4`
-- `React 19.2.4`
-- `TypeScript 5`
-- `Supabase` via `@supabase/supabase-js` and `@supabase/ssr`
-- `@node-rs/argon2` and `bcryptjs` for password compatibility
+- Next.js 16.2.4 / React 19.2.4
+- TypeScript 5
+- Supabase PostgreSQL and Auth
+- @supabase/ssr and @supabase/supabase-js
 
-## Project Status
+## Main routes
 
-- `crud-php2/` is still in the repo as a functional and visual reference.
-- The new app lives mostly in `app/`, `components/`, `src/`, and `public/`.
-- Several screens have already been migrated and wired together.
-- Login and part of onboarding work in demo mode through a cookie.
-- Some screens already read from the database, while others still use mock data.
-- Parking publication is still a demo flow and does not persist a real new listing yet.
+- `/` — Home
+- `/parqueos` — Parking catalog
+- `/parqueos/[slug]` — Parking post details
+- `/sobre-nosotros` — About the project
+- `/login` and `/register` — Demo authentication flows
+- `/mi-cuenta`, `/mis-parqueos`, `/mis-reservas` — Account areas
 
-## Main Routes
-
-- `/`
-- `/parqueos`
-- `/parqueos/[slug]`
-- `/sobre-nosotros`
-- `/login`
-- `/register`
-- `/verify-email`
-- `/mi-cuenta`
-- `/mis-reservas`
-- `/mis-parqueos`
-- `/mis-parqueos/[parkingId]/reservas`
-- `/guardados`
-- `/guardados/carpeta/[id]`
-- `/notificaciones`
-- `/configuracion`
-- `/publicar-parqueo`
-- `/planes`
-
-## Demo Flow
-
-There are two demo accounts available at `/login`:
-
-- `customer`: lands on `/mis-reservas`
-- `owner`: lands on `/mis-parqueos`
-
-Also:
-
-- `/publicar-parqueo` only allows `owner` users
-- `/mis-reservas` is oriented to the `customer` role
-- `/mis-parqueos` and its reservations are oriented to the `owner` role
-
-## Local Development
+## Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000`.
+## Environment variables
 
-## Environment Variables
+Set these in a local `.env.local` file. Never commit credentials or private keys.
 
-The app can run partially without the full production setup, but these variables are the most relevant:
-
-```bash
+```env
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
-
 SUPABASE_SERVICE_ROLE_KEY=
-SUPABASE_AVATARS_BUCKET=
-SUPABASE_PARKINGS_BUCKET=
-SITE_URL=
+SITE_URL=http://localhost:3000
+SUPABASE_AVATARS_BUCKET=avatars
+SUPABASE_PARKINGS_BUCKET=parkings
 ```
 
-You can use `.env.example` as a starting point.
-
-## Quick Structure
+## Structure
 
 ```text
-app/                 Routes, pages, route handlers, and feature-specific logic
-components/          Shared header, footer, and hooks for the site
-src/components/      Landing page components and copy types
-public/parkingsv/    Visual assets used by the migrated app
-crud-php2/           Original PHP site kept as a reference
-node_modules/next/dist/docs/
-                     Local documentation for the current Next.js version
+app/                 Routes, pages, API handlers, and feature logic
+components/          Shared components
+src/                 Configuration and utilities
+public/parkingsv/    Visual identity, generic avatars, and parking photos
+supabase/migrations/ Database migrations
 ```
 
-## Important Conventions
+## Scope and limitations
 
-- This project uses the `App Router`.
-- Before changing Next.js patterns, check the local docs in `node_modules/next/dist/docs/`.
-- In this Next version, pages and layouts are `Server Components` by default.
-- Components that use state, effects, or `localStorage` should stay as `Client Components`.
-- Several views still keep demo data so the visual migration can move ahead while the backend is finished.
-
-## Migration Notes
-
-- If you migrate a view from PHP, treat `crud-php2/` as the visual source of truth.
-- If a route depends on the browser, try moving that part into a small client component.
-- If a screen mixes demo data with real data, document which one drives the flow.
+This repository is an academic sample. Parking listings, user profiles, phone numbers, and email addresses are demonstration data and must not be interpreted as current commercial offers or operational information. Actions requiring real availability or contact are not enabled.

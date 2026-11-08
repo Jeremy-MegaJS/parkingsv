@@ -1,61 +1,32 @@
-# Parking SV
+# Parking SV — Demo académica
 
-Migración del sitio original en `crud-php2/` hacia una app con `Next.js 16` y `React 19`.
+Parking SV es una aplicación académica de demostración construida con **Next.js 16, React 19, TypeScript y Supabase**. No es un servicio comercial ni ofrece disponibilidad real, reservas operativas o contacto con establecimientos.
 
-## Resumen
+## Qué contiene
 
-Parking SV mezcla una base visual heredada del proyecto PHP con nuevas pantallas en App Router. El objetivo actual del repo es avanzar la migración de experiencia, rutas y flujos principales sin perder compatibilidad visual con la versión original.
+- Catálogo de cuatro publicaciones de parqueos conservadas del proyecto académico original.
+- Fotografías originales asociadas a esas publicaciones.
+- Ubicaciones, categorías, horarios, capacidades, tarifas, servicios y restricciones.
+- Perfiles sintéticos de clientes y propietarios, con avatares genéricos.
+- Interfaz bilingüe y rutas de demostración para explorar la experiencia.
+
+Los nombres y datos de contacto de las publicaciones fueron sustituidos por valores ficticios. No se importaron cuentas, contraseñas ni datos personales del sistema anterior.
 
 ## Stack
 
-- `Next.js 16.2.4`
-- `React 19.2.4`
-- `TypeScript 5`
-- `MySQL` con `mysql2`
-- `nodemailer` para correo transaccional
-- `@node-rs/argon2` y `bcryptjs` para compatibilidad de contraseñas
-
-## Estado del proyecto
-
-- `crud-php2/` sigue dentro del repo como referencia funcional y visual.
-- La app nueva vive sobre todo en `app/`, `components/`, `src/` y `public/`.
-- Varias pantallas ya están migradas y conectadas entre sí.
-- El login y parte del onboarding funcionan en modo demo por cookie.
-- Algunas pantallas ya consumen base de datos y otras todavía usan datos mock.
-- La publicación de parqueos sigue siendo demo y no guarda una publicación nueva real.
+- Next.js 16.2.4 / React 19.2.4
+- TypeScript 5
+- Supabase PostgreSQL y Auth
+- @supabase/ssr y @supabase/supabase-js
 
 ## Rutas principales
 
-- `/`
-- `/parqueos`
-- `/parqueos/[slug]`
-- `/sobre-nosotros`
-- `/login`
-- `/register`
-- `/verify-email`
-- `/mi-cuenta`
-- `/mis-reservas`
-- `/mis-parqueos`
-- `/mis-parqueos/[parkingId]/reservas`
-- `/guardados`
-- `/guardados/carpeta/[id]`
-- `/notificaciones`
-- `/configuracion`
-- `/publicar-parqueo`
-- `/planes`
-
-## Flujo demo
-
-En `/login` existen dos cuentas demo listas para probar el producto:
-
-- `customer`: aterriza en `/mis-reservas`
-- `owner`: aterriza en `/mis-parqueos`
-
-Además:
-
-- `/publicar-parqueo` solo permite acceso a usuarios `owner`
-- `/mis-reservas` está orientada al rol `customer`
-- `/mis-parqueos` y sus reservas están orientadas al rol `owner`
+- `/` — Inicio
+- `/parqueos` — Catálogo de parqueos
+- `/parqueos/[slug]` — Detalle de una publicación
+- `/sobre-nosotros` — Información del proyecto
+- `/login` y `/register` — Flujos de autenticación de demostración
+- `/mi-cuenta`, `/mis-parqueos`, `/mis-reservas` — Áreas de cuenta
 
 ## Desarrollo local
 
@@ -64,55 +35,29 @@ npm install
 npm run dev
 ```
 
-Luego abre `http://localhost:3000`.
-
 ## Variables de entorno
 
-La app puede correr parcialmente sin toda la infraestructura final, pero estas variables son las más relevantes:
+Configura las variables en un archivo local `.env.local`. No publiques credenciales ni claves privadas.
 
-```bash
-DB_HOST=
-DB_PORT=
-DB_USER=
-DB_PASSWORD=
-DB_NAME=
-
-SMTP_HOST=
-SMTP_PORT=
-SMTP_SECURE=
-SMTP_USER=
-SMTP_PASSWORD=
-SMTP_FROM_EMAIL=
-SMTP_FROM_NAME=
-
-PENDING_VERIFICATION_SECRET=
-SESSION_SECRET=
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+SITE_URL=http://localhost:3000
+SUPABASE_AVATARS_BUCKET=avatars
+SUPABASE_PARKINGS_BUCKET=parkings
 ```
 
-Puedes usar `.env.example` como base.
-
-## Estructura rápida
+## Estructura
 
 ```text
-app/                 Rutas, páginas, route handlers y lógica por feature
-components/          Header, footer y hooks compartidos del sitio
-src/components/      Componentes de la landing y tipos de copy
-public/parkingsv/    Assets visuales usados por la app migrada
-crud-php2/           Sitio original en PHP usado como referencia
-node_modules/next/dist/docs/
-                     Documentación local de la versión actual de Next.js
+app/                 Rutas, páginas, API y lógica de funcionalidades
+components/          Componentes compartidos
+src/                 Configuración y utilidades
+public/parkingsv/    Identidad visual, avatares genéricos y fotos de parqueos
+supabase/migrations/ Migraciones de base de datos
 ```
 
-## Convenciones importantes
+## Alcance y limitaciones
 
-- Este proyecto usa `App Router`.
-- Antes de cambiar patrones de Next.js, revisa la documentación local en `node_modules/next/dist/docs/`.
-- En esta versión de Next, páginas y layouts son `Server Components` por defecto.
-- Los componentes con estado, efectos o `localStorage` deben quedarse como `Client Components`.
-- Varias vistas conservan datos demo para no bloquear la migración visual mientras se completa el backend.
-
-## Notas para migración
-
-- Si migras una vista desde PHP, toma `crud-php2/` como fuente de verdad visual.
-- Si una ruta depende del navegador, intenta mover esa parte a un componente cliente pequeño.
-- Si una pantalla mezcla datos demo y datos reales, documenta claramente cuál de los dos domina el flujo.
+Este repositorio es una muestra académica. Los parqueos, usuarios, teléfonos y correos que se muestran como datos de demostración no deben interpretarse como una oferta comercial ni como información operativa actual. Las acciones que requieran disponibilidad o contacto real no están habilitadas.

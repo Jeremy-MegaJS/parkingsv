@@ -133,7 +133,7 @@ type VehicleTypeRow = {
   id: number;
 };
 
-const LEGACY_PARKING_UPLOAD_PREFIX = "public/uploads/";
+const LEGACY_PARKING_UPLOAD_PREFIX = "public/uploads/parkings/";
 const PARKING_SELECT = `
   id,
   owner_id,
@@ -177,10 +177,10 @@ function resolveLegacyParkingImage(path: string | null | undefined) {
   }
 
   if (path.startsWith(LEGACY_PARKING_UPLOAD_PREFIX)) {
-    return `/legacy-assets/${path.slice(LEGACY_PARKING_UPLOAD_PREFIX.length)}`;
+    return `/parkingsv/listings/${path.slice(LEGACY_PARKING_UPLOAD_PREFIX.length)}`;
   }
 
-  return `/legacy-assets/${path}`;
+  return "/parkingsv/parking-default.png";
 }
 
 function normalizeSchedule(

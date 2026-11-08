@@ -220,7 +220,7 @@ export async function upsertPublicUserProfile(input: UpsertPublicUserInput) {
     business_name: existing?.businessName ?? null,
     date_of_birth: input.dateOfBirth ?? existing?.dateOfBirth ?? null,
     email: normalizedEmail,
-    email_verified: emailVerified ? 1 : 0,
+    email_verified: emailVerified,
     email_verified_at:
       emailVerified
         ? input.authUser?.email_confirmed_at ?? existing?.emailVerifiedAt ?? new Date().toISOString()
@@ -295,7 +295,7 @@ export async function updatePublicUserProfileById(
       business_name: businessName,
       date_of_birth: dateOfBirth,
       email: normalizedEmail,
-      email_verified: emailVerified ? 1 : 0,
+      email_verified: emailVerified,
       email_verified_at:
         emailVerified ? existing.emailVerifiedAt ?? new Date().toISOString() : null,
       full_name: fullName,

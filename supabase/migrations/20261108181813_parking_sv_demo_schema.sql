@@ -163,14 +163,10 @@ alter table public.parking_restriction_items enable row level security;
 alter table public.reviews enable row level security;
 
 drop policy if exists users_read_own_demo_profile on public.users;
-create policy users_read_own_demo_profile on public.users for select to authenticated using (lower(email) = public.current_auth_email());
-drop policy if exists users_update_own_demo_profile on public.users;
-create policy users_update_own_demo_profile on public.users for update to authenticated using (lower(email) = public.current_auth_email()) with check (lower(email) = public.current_auth_email());
-
-drop policy if exists parking_posts_public_read on public.parkings;
+create policy users_read_own_demo_profile on public.users for select to authenticated drop policy if exists parking_posts_public_read on public.parkings;
 create policy parking_posts_public_read on public.parkings for select to anon, authenticated using (status = 'activo');
 drop policy if exists locations_for_public_posts on public.locations;
-create policy locations_for_public_posts on public.locations for select to anon, authenticated using (exists (select 1 from public.parkings p where p.location_id = id and p.status = 'activo'));
+create policy locations_for_public_posts on public.locations for select to anon, authenticated using (exists (select 1 from public.parkings p where p.location_id = locations.id and p.status = 'activo'));
 drop policy if exists parking_categories_public_read on public.parking_categories;
 create policy parking_categories_public_read on public.parking_categories for select to anon, authenticated using (true);
 drop policy if exists vehicle_types_public_read on public.vehicle_types;
@@ -200,5 +196,5 @@ grant select on public.locations, public.parking_categories, public.vehicle_type
  public.parkings, public.parking_images, public.parking_capacities, public.parking_vehicle_capacities,
  public.parking_fees, public.parking_services, public.parking_restrictions, public.parking_restriction_items,
  public.reviews to anon, authenticated;
-grant select, update on public.users to authenticated;
+grant select on public.users to authenticated;
 grant all on all tables in schema public to service_role;

@@ -45,7 +45,11 @@ export async function loginAction(_previousState: LoginFormState, formData: Form
       return createState(redirectTarget, email, password, {}, copy.unverified);
     }
     const publicUser = await getPublicUserByEmail(email);
-    const userType = publicUser?.userType ?? "customer";
+    if (!publicUser?.emailVerified) {
+      await supabase.auth.signOut();
+      return createState(redirectTarget, email, password, {}, copy.unverified);
+    }
+    const userType = publicUser.userType;
     destination = redirectTarget === "/parqueos" ? resolveDefaultRouteForUserType(userType) : redirectTarget;
   } catch (error) {
     console.warn("Login action failed.", formatSupabaseErrorForLog(error));

@@ -2,7 +2,6 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/src/lib/supabase/public";
 
-const AUTH_PAGES = ["/login", "/register"];
 const PROTECTED_PREFIXES = [
   "/account",
   "/my-parkings",
@@ -24,10 +23,6 @@ function isProtectedPath(pathname: string) {
   return PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-}
-
-function isAuthPage(pathname: string) {
-  return AUTH_PAGES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
 export async function updateSession(request: NextRequest) {
@@ -81,12 +76,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isAuthenticated && isAuthPage(pathname)) {
-    const accountUrl = request.nextUrl.clone();
-    accountUrl.pathname = "/mi-cuenta";
-    accountUrl.search = "";
-    return NextResponse.redirect(accountUrl);
-  }
 
   return response;
 }

@@ -7,18 +7,18 @@ import { formatSupabaseErrorForLog, getSupabaseFriendlyErrorMessage } from "@/sr
 import { createSupabaseServerClient } from "@/src/lib/supabase/server";
 
 export type VerifyRegistrationState = { error: string };
-export type ResendRegistrationState = { error?: string; success?: string };
+export type ResendRegistrationState = { error?: string; success?: string; requestedAt?: number };
 
-const EMAIL_PATTERN = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function verifyRegistrationOtpAction(
   _previous: VerifyRegistrationState,
   formData: FormData,
 ): Promise<VerifyRegistrationState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  const token = String(formData.get("token") ?? "").replace(/\\s/g, "");
+  const token = String(formData.get("token") ?? "").replace(/\s/g, "");
 
-  if (!EMAIL_PATTERN.test(email) || !/^\\d{8}$/.test(token)) {
+  if (!EMAIL_PATTERN.test(email) || !/^\d{8}$/.test(token)) {
     return { error: "Ingresa los 8 dígitos del código enviado a tu correo." };
   }
 

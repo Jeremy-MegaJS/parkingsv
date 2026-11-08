@@ -9,6 +9,7 @@ import type {
   VehicleCapacity,
 } from "@/app/parkings/parking-data";
 import { createSupabaseAdminClient } from "@/src/lib/supabase/admin";
+import { createSupabasePublicServerClient } from "@/src/lib/supabase/public-server";
 import { formatSupabaseErrorForLog } from "@/src/lib/supabase/errors";
 
 type ParkingRecord = {
@@ -485,8 +486,8 @@ function mapParkingRecord(record: ParkingRecord): Parking {
 
 async function queryParkings() {
   try {
-    const admin = createSupabaseAdminClient();
-    const { data, error } = await admin
+    const supabase = createSupabasePublicServerClient();
+    const { data, error } = await supabase
       .from("parkings")
       .select(PARKING_SELECT)
       .eq("status", "activo");

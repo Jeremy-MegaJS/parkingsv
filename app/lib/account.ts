@@ -136,7 +136,7 @@ export function resolveAccountProfilePicture(profilePicture: string | null) {
     return DEFAULT_AVATAR;
   }
 
-  if (profilePicture.startsWith("/parkingsv/") || /^https?:\\/\\//i.test(profilePicture)) {
+  if (profilePicture.startsWith("/parkingsv/") || /^https?:\/\//i.test(profilePicture)) {
     return profilePicture;
   }
 

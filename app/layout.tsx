@@ -32,7 +32,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Parking SV",
-  description: "Parking SV — demo académica con datos sintéticos. No ofrece disponibilidad ni reservas reales.",
+  description: "Parking SV — explora opciones de estacionamiento y conoce una plataforma que conecta conductores con propietarios.",
 };
 
 export default function RootLayout({
@@ -58,11 +58,6 @@ export default function RootLayout({
           <span className="site-glow-shape site-glow-shape-bottom" />
         </div>
         <div className="site-app-shell">
-          <aside className="academic-demo-notice" role="note">
-            <strong>DEMO ACADÉMICA</strong>
-            <span>Datos sintéticos; no ofrece disponibilidad ni reservas reales.</span>
-            <span className="academic-demo-notice__en">ACADEMIC DEMO · Synthetic data; no real availability or bookings.</span>
-          </aside>
           <SettingsBridge />
           {children}
         </div>
